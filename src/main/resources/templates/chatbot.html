@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 导入jQuery库 -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <style>
+        #chat-container {
+            height: 617px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px; /* 增加底部间距 */
+            border-radius: 10px;
+        }
+        .message {
+            margin-bottom: 10px;
+        }
+        .user-message {
+            text-align: right;
+        }
+        .robot-message {
+            text-align: left;
+        }
+        .message-bubble {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #eee;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            float: right; /* 将用户头像放在右边 */
+            margin-left: 10px; /* 设置头像与消息气泡之间的间距 */
+        }
+        .robot-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            float: left;
+            margin-right: 10px;
+        }
+        #user-input {
+            margin-top: 12px;
+        }
+        #messageInput {
+            height: 35px;
+            width: 88%; /* 调整输入框宽度 */
+            margin-right: 12px; /* 增加输入框右侧间距 */
+            border-radius: 13px;
+            font-size: medium;
+        }
+        #sendButton {
+            height: 35px;
+            width: 10%; /* 调整按钮宽度 */
+            border-radius: 12px;
+
+            font-weight: bold;
+            font-size: medium;
+            background-color: palegreen;
+        }
+    </style>
+</head>
+<body>
+<div id="chat-container">
+    <div id="chat"></div>
+</div>
+<div id="user-input">
+    <input type="text" id="messageInput" placeholder="    请发送消息   "/>
+    <button onclick="sendMessage()" id="sendButton">Send</button>
+</div>
+
+<script th:inline="javascript">
+
+    // 监听输入框的键盘事件
+    $('#messageInput').keypress(function(event) {
+        // 如果按下的键是回车键 (keyCode 为 13)
+        if (event.which === 13) {
+            sendMessage(); // 调用发送消息的函数
+        }
+    });
+
+    function sendMessage() {
+        var message = $('#messageInput');
+        if (message.trim() !== '') {
+            var data = {
+                message: message
+            };
+
+            // 发送用户消息到后端
+            $.ajax({
+                type: 'POST',
+                url: '/api/chatbot/user',
+                contentType: 'application/json', // 设置 Content-Type 为 JSON
+                data: JSON.stringify(data), // 将数据对象转为 JSON 字符串
+                success: function () {
+                    // 清空输入框
+                    $('#messageInput').val('');
+
+                    appendMessage('user', message);
+                    receiveMessage();
+
+                    // 滚动到最新消息
+                    scrollToBottom();
+                }
+            });
+        }
+    }
+
+    function receiveMessage() {
+        // 接收机器人消息
+        $.get("/api/chatbot/robot", function(message) {
+            // 渲染机器人消息
+            appendMessage('robot', message.content);
+            // 滚动到最新消息
+            scrollToBottom();
+        });
+    }
+
+    function getChatHistory() {
+        // 获取聊天记录
+        $.get("/api/chatbot/history", function(history) {
+            // 渲染聊天记录
+            history.forEach(function(message) {
+                appendMessage(message.sender, message.content);
+            });
+            // 滚动到最新消息
+            scrollToBottom();
+        });
+    }
+
+    function appendMessage(sender, content) {
+        // 将消息追加到聊天界面
+        var chat = $('#chat');
+        var messageContainer = $('<div></div>').addClass('message');
+        var messageBubble = $('<div></div>').addClass('message-bubble').text(content);
+
+        if (sender === 'user') {
+            messageContainer.addClass('user-message');
+            messageContainer.append('<img src="images/user_avatar.png" alt="User Avatar" class="user-avatar" />');
+        } else if (sender === 'robot') {
+            messageContainer.addClass('robot-message');
+            messageContainer.append('<img src="images/robot_avatar.png" alt="Robot Avatar" class="robot-avatar" />');
+        }
+
+        messageContainer.append(messageBubble);
+        chat.append(messageContainer);
+    }
+
+    function scrollToBottom() {
+        // 滚动到最新消息
+        var chatContainer = $('#chat-container');
+        chatContainer.scrollTop(chatContainer.prop('scrollHeight'));
+    }
+
+    // 启动聊天
+    $(document).ready(function() {
+        getChatHistory();
+    });
+</script>
+</body>
+</html>

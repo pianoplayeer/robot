@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+</head>
+
+<style>
+    .body {
+        background-image: url(images/bupt.jpeg);
+        background-size: 100%;
+    }
+
+    .pos {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .item {
+        margin: 40px;
+    }
+
+    form {
+        width: 35%;
+        margin: 80px auto 0;
+    }
+</style>
+
+<body class="body">
+<div class="pos">
+    <h1>客服机器人</h1>
+</div>
+
+<form method="POST" th:action="@{/register}" id="registerForm">
+    <label for="username">账号: </label>
+    <input type="text" name="username" id="username" /><br/>
+
+    <label for="password">密码: </label>
+    <input type="password" name="password" id="password" /><br/>
+
+    <label for="confirm">确认密码: </label>
+    <input type="password" name="confirm" id="confirm" /><br/>
+
+    <input type="submit" value="注册" class="item" style="margin: auto 0">
+
+</form>
+
+<div th:if="${param.error}" class="pos" style="color: red">
+    两次输入的密码不一致
+</div>
+<div th:if="${param.repeat}" class="pos" style="color: red">
+    该用户名已存在
+</div>
+
+</body>
+</html>

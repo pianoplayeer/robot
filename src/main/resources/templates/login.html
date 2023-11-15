@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" lang="ch">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+
+<style>
+    body {
+        background-image: url(/images/bupt.jpeg);
+        background-size: 100%;
+    }
+
+    .pos {
+        text-align: center;
+        margin-top: 50px;
+    }
+
+    .container {
+        display: flex;
+    }
+
+    .item {
+        margin: 40px;
+    }
+
+    form {
+        width: 20%;
+        margin: 50px auto 0;
+    }
+</style>
+
+<body>
+    <div class="pos">
+        <h1>客服机器人</h1>
+    </div>
+
+    <div th:if="${param.error}" class="pos" style="color: red">
+        账号或密码错误
+    </div>
+
+    <form method="POST" th:action="@{/login}" id="loginForm">
+        <label for="username">账号: </label>
+        <input type="text" name="username" id="username" /><br/>
+
+        <label for="password">密码: </label>
+        <input type="password" name="password" id="password" /><br/>
+
+        <div class="container">
+            <input type="submit" value="登录" class="item"/>
+            <a th:href="@{/register}"><input type="button" value="注册" class="item" /></a>
+        </div>
+
+    </form>
+
+
+
+</body>
+</html>
