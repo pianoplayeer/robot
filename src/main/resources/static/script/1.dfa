@@ -1,14 +1,10 @@
 start:
   response:
-    "欢迎使用客服机器人。您可以查询以下问题/进行以下操作：\n
-    1. 余额\n
-    2. 充值\n
-    请问您想进行什么查询/操作？\n"
-  shift:
-    wait
-
-# wait用于等待用户输入，直到用户输入了一个合法的选项，才会进行下一步
-wait:
+    - content:
+        "欢迎使用客服机器人。您可以查询以下问题/进行以下操作：\n
+        \t1. 余额\n
+        \t2. 充值\n
+        请问您想进行什么查询/操作？"
   shift:
     余额:
       balance
@@ -16,13 +12,44 @@ wait:
       recharge
 
 balance:
-  hasResponseAction:
-    true
   response:
-    "您的余额为：\n"
-  responseAction:
-    findBalanceByUserName
+    - content:
+        "您的余额为：\n"
+    - action:
+        findBalance
   shift:
-    wait
+    余额:
+      balance
+    充值:
+      recharge
+    default:
+      start
+
+recharge:
+  response:
+    - content:
+        "请问您想充值多少？(请输入数额)"
+  shift:
+    default:
+      rechargeAmount
+
+rechargeAmount:
+  response:
+    - action:
+        isNumber
+    - action:
+        updateBalance
+    - content:
+        "充值成功！您的余额为："
+    - action:
+        findBalance
+
+  shift:
+    余额:
+      balance
+    充值:
+      recharge
+    default:
+      start
 
 

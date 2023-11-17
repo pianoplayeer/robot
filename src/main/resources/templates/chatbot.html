@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         #chat-container {
-            height: 617px;
+            height: 575px;
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
@@ -14,6 +14,7 @@
         }
         .message {
             margin-bottom: 10px;
+            white-space:pre-wrap;
         }
         .user-message {
             text-align: right;
@@ -52,6 +53,7 @@
             margin-right: 12px; /* 增加输入框右侧间距 */
             border-radius: 13px;
             font-size: medium;
+            white-space: pre-wrap;
         }
         #sendButton {
             height: 35px;
@@ -84,7 +86,7 @@
     });
 
     function sendMessage() {
-        var message = $('#messageInput');
+        var message = $('#messageInput').val();
         if (message.trim() !== '') {
             var data = {
                 message: message

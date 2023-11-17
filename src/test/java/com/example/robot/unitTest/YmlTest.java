@@ -5,6 +5,8 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -20,12 +22,15 @@ public class YmlTest {
 		) {
 			Yaml yaml = new Yaml();
 			Map<String, Object> data = yaml.load(inputStream);
-			System.out.println(data);
+			List<Map<String, Object>> list = (List<Map<String, Object>>) ((Map<String, Object>) data.get("balance")).get("response");
 			
-			
+			System.out.println(list);
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+	
+	
 }
 
