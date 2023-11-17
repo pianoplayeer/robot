@@ -49,9 +49,10 @@ public class ChatBotApiController {
 		this.env = env;
 	}
 	
-	@PostMapping(path="/user", produces="application/json")
-	public void sendUserMessage(@RequestBody Map<String, String> message) {
-		DFAParser parser = userParserMap.get(getCurrentUsername());
+	@PostMapping(path="/user/{username}", produces="application/json")
+	public void sendUserMessage(@RequestBody Map<String, String> message,
+								@PathVariable String username) {
+		DFAParser parser = userParserMap.get(username);
 		List<Message> messages = parser.getMsgList();
 		parser.transferState(message.get("message"));
 		
@@ -63,24 +64,25 @@ public class ChatBotApiController {
 		messages.add(robotMessage);
 	}
 	
-	@GetMapping("/robot")
-	public Message getBotMessage() {
-		DFAParser parser = userParserMap.get(getCurrentUsername());
+	@GetMapping("/robot/{username}")
+	public Message getBotMessage(@PathVariable String username) {
+		DFAParser parser = userParserMap.get(username);
 		List<Message> messages = parser.getMsgList();
 		
 		// 返回聊天记录
 		return messages.get(messages.size() - 1);
 	}
 	
-	@GetMapping("/history")
-	public List<Message> getChatHistory() {
+	@GetMapping("/history/{username}")
+	public List<Message> getChatHistory(@PathVariable String username) {
 		DFAParser parser;
 		
-		if (!userParserMap.containsKey(getCurrentUsername())) {
-			parser = new DFAParser(userRepos, getCurrentUsername(),
+		if (!userParserMap.containsKey(username)) {
+			parser = new DFAParser(userRepos, username,
 									loader, env);
+			userParserMap.put(username, parser);
 		} else {
-			parser = userParserMap.get(getCurrentUsername());
+			parser = userParserMap.get(username);
 		}
 		List<Message> messages = parser.getMsgList();
 		
@@ -92,13 +94,6 @@ public class ChatBotApiController {
 		return messages;
 	}
 	
-	public String getCurrentUsername() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication != null) {
-			return authentication.getName();
-		}
-		return null;
-	}
 }
 
 

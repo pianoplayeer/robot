@@ -3,6 +3,7 @@ package com.example.robot.utils;
 import com.example.robot.data.User;
 import com.example.robot.data.repos.UserRepository;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -25,6 +26,7 @@ import java.util.Map;
  */
 
 @Data
+@Slf4j
 public class DFAParser {
 	
 	private HashMap<String, Object> stateMap;
@@ -43,6 +45,7 @@ public class DFAParser {
 		String script = env.getProperty("dfa.filename");
 		String filePath = "classpath:/static/script/" + script;
 		Resource resource = loader.getResource(filePath);
+		log.info("script: {}", script);
 		
 		try(
 				InputStream inputStream = new FileInputStream(resource.getFile())

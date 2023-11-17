@@ -92,10 +92,12 @@
                 message: message
             };
 
+            var user = [[${user}]];
+
             // 发送用户消息到后端
             $.ajax({
                 type: 'POST',
-                url: '/api/chatbot/user',
+                url: '/api/chatbot/user/' + user,
                 contentType: 'application/json', // 设置 Content-Type 为 JSON
                 data: JSON.stringify(data), // 将数据对象转为 JSON 字符串
                 success: function () {
@@ -113,8 +115,9 @@
     }
 
     function receiveMessage() {
+        var user = [[${user}]];
         // 接收机器人消息
-        $.get("/api/chatbot/robot", function(message) {
+        $.get("/api/chatbot/robot/" + user, function(message) {
             // 渲染机器人消息
             appendMessage('robot', message.content);
             // 滚动到最新消息
@@ -123,8 +126,10 @@
     }
 
     function getChatHistory() {
+        var user = [[${user}]];
+
         // 获取聊天记录
-        $.get("/api/chatbot/history", function(history) {
+        $.get("/api/chatbot/history/" + user, function(history) {
             // 渲染聊天记录
             history.forEach(function(message) {
                 appendMessage(message.sender, message.content);
