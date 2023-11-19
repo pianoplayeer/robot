@@ -7,12 +7,51 @@ start:
         \t3. 已购套餐\n
         \t4. 购买套餐\n
         \t5. 退订套餐\n
-        请问您想进行什么查询/操作？"
+        请问您想进行什么查询/操作？（输入选项名称）"
   shift:
     余额:
       balance
     充值:
       recharge
+    购买套餐:
+      buyPackage
+
+boughtPackage:
+  response:
+    - content:
+        "您已购买的套餐有："
+    - action:
+        findPackage
+  shift:
+    default:
+      start
+
+buyPackage:
+  response:
+    - content:
+        "您还未购买过的套餐有：\n"
+    - action:
+        findAvailablePackage
+    - content:
+        "请问您想购买哪个套餐？(请输入套餐名称)"
+
+  shift:
+    default:
+      buyPackageAmount
+
+buyPackageAmount:
+    response:
+        - action:
+            hasPackage
+        - action:
+            updatePackage
+        - content:
+            "购买成功！您已购买的套餐有："
+        - action:
+            findPackage
+    shift:
+      default:
+        start
 
 balance:
   response:

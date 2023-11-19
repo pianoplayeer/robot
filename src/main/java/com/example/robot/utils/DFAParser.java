@@ -1,16 +1,16 @@
 package com.example.robot.utils;
 
+import com.example.robot.data.DataPackage;
 import com.example.robot.data.User;
 import com.example.robot.data.repos.UserRepository;
+import com.example.robot.service.RepositoryService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.yaml.snakeyaml.Yaml;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,12 +36,12 @@ public class DFAParser {
 	private ArrayList<Message> msgList = new ArrayList<>();
 	
 	private String username;
-	private UserRepository userRepos;
+	private RepositoryService reposService;
 	
-	public DFAParser(UserRepository repos, String username,
+	public DFAParser(RepositoryService reposService, String username,
 					 ResourceLoader loader, Environment env) {
 		this.username = username;
-		userRepos = repos;
+		this.reposService = reposService;
 		
 		String script = env.getProperty("dfa.filename");
 		String filePath = "classpath:/static/script/" + script;
@@ -109,7 +110,7 @@ public class DFAParser {
 		DecimalFormat format = new DecimalFormat("#,##0.00");
 		
 		return format.format(((User) UserRepository.class.getDeclaredMethod("findByUsername", String.class)
-											.invoke(userRepos, username)).getBalance());
+											.invoke(reposService.getUserRepos(), username)).getBalance());
 	}
 	
 	public void isNumber() throws ActionException {
@@ -120,9 +121,44 @@ public class DFAParser {
 		}
 	}
 	
-	public void updateBalance() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	public void updateBalance()
+			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+		
 		UserRepository.class.getDeclaredMethod("updateBalanceByUsername", String.class, double.class)
-							.invoke(userRepos, username, Double.parseDouble(currentMsg));
+							.invoke(reposService.getUserRepos(), username, Double.parseDouble(currentMsg));
+	}
+	
+	public String findAvailablePackage() throws ActionException {
+		List<DataPackage> boughtPackages = reposService.getUserRepos().findByUsername(username).getPackageList();
+		StringBuilder builder = new StringBuilder();
+		
+		for (DataPackage p : reposService.getDataPackageRepos().findAll()) {
+			if (!boughtPackages.contains(p)) {
+				builder.append(p.getPackageName()).append("\n");
+			}
+		}
+		
+		if (builder.length() == 0) {
+			throw new ActionException("无可购买套餐");
+		}
+		
+		return builder.toString();
+	}
+	
+	public String findPackage() throws ActionException {
+		StringBuilder builder = new StringBuilder();
+		
+		for (DataPackage p : reposService.getUserRepos()
+				.findByUsername(username).getPackageList()) {
+			
+			builder.append(p.getPackageName()).append("\n");
+		}
+		
+		if (builder.length() == 0) {
+			throw new ActionException("您未购买任何套餐");
+		}
+		
+		return builder.toString();
 	}
 }
 

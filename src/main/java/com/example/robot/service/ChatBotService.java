@@ -22,7 +22,7 @@ import java.util.Map;
 @Service
 public class ChatBotService {
 	
-	private UserRepository userRepos;
+	private RepositoryService reposService;
 	
 	private Map<String, DFAParser> userParserMap = new HashMap<>();
 	
@@ -31,8 +31,8 @@ public class ChatBotService {
 	private ResourceLoader loader;
 	
 	
-	public ChatBotService(UserRepository userRepos, ResourceLoader loader, Environment env) {
-		this.userRepos = userRepos;
+	public ChatBotService(RepositoryService reposService, ResourceLoader loader, Environment env) {
+		this.reposService = reposService;
 		this.loader = loader;
 		this.env = env;
 	}
@@ -62,7 +62,7 @@ public class ChatBotService {
 		DFAParser parser;
 		
 		if (!userParserMap.containsKey(username)) {
-			parser = new DFAParser(userRepos, username,
+			parser = new DFAParser(reposService, username,
 					loader, env);
 			userParserMap.put(username, parser);
 		} else {
