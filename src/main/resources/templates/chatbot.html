@@ -91,8 +91,11 @@
             var data = {
                 message: message
             };
-
             var user = [[${user}]];
+
+            // 清空输入框
+            $('#messageInput').val('');
+            appendMessage('user', message);
 
             // 发送用户消息到后端
             $.ajax({
@@ -101,10 +104,7 @@
                 contentType: 'application/json', // 设置 Content-Type 为 JSON
                 data: JSON.stringify(data), // 将数据对象转为 JSON 字符串
                 success: function () {
-                    // 清空输入框
-                    $('#messageInput').val('');
 
-                    appendMessage('user', message);
                     receiveMessage();
 
                     // 滚动到最新消息

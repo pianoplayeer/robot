@@ -1,17 +1,12 @@
 package com.example.robot.data;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -23,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor(access= AccessLevel.PRIVATE, force=true)
+@NoArgsConstructor(access= AccessLevel.PUBLIC, force=true)
 @RequiredArgsConstructor
 public class User implements UserDetails {
 	@Id
@@ -33,6 +28,14 @@ public class User implements UserDetails {
 	private final String username;
 	private final String password;
 	private double balance;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "user_package_list", // 中间表的名称
+			joinColumns = @JoinColumn(name = "user_id"), // 当前实体在中间表中的外键列名
+			inverseJoinColumns = @JoinColumn(name = "package_id") // 关联实体在中间表中的外键列名
+	)
+	private final List<DataPackage> packageList = new ArrayList<>();
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities () {
