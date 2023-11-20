@@ -41,6 +41,9 @@ public class SecurityConfig {
 						c -> c.loginPage("/login").defaultSuccessUrl("/chatbot", true)
 									 .failureUrl("/login?error")
 				)
+				.logout(
+						c -> c.logoutSuccessUrl("/")
+				)
 				.userDetailsService(userDetailsService)
 				.authorizeHttpRequests(
 						c -> c.requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/images/*").permitAll()

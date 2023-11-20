@@ -5,7 +5,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <style>
         #chat-container {
-            height: 575px;
+            height: 530px;
             overflow-y: auto;
             border: 1px solid #ccc;
             padding: 10px;
@@ -64,9 +64,52 @@
             font-size: medium;
             background-color: palegreen;
         }
+        #current-time {
+            font-size: medium;
+            font-weight: normal;
+        }
+        #top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        #user {
+            display: flex;
+            justify-content: right;
+            align-items: center;
+            background-color: #f2f2f2;
+
+        }
+        #logout {
+            height: 30px;
+            width: 100%; /* 调整按钮宽度 */
+            border-radius: 5px;
+
+            font-weight: bold;
+            font-size: medium;
+            background-color: darkgray;
+        }
+        .user-info {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
+<div id="top-bar">
+    <div id="current-time"></div>
+    <div id="user">
+        <img src="images/user.png" alt="user" class="user-avatar" style="margin-right: 10px"/>
+        <div class="user-info">[[${user}]]</div>
+        <form method="POST" th:action="@{/logout}" id="logoutForm">
+            <input type="submit" value="退出" id="logout"/>
+        </form>
+    </div>
+
+</div>
 <div id="chat-container">
     <div id="chat"></div>
 </div>
@@ -77,6 +120,11 @@
 
 <script th:inline="javascript">
 
+    // $('#logout').click(function() {
+    //     // 向后端发送请求，清除 session 或 token
+    //     $.post('/logout');
+    // });
+
     // 监听输入框的键盘事件
     $('#messageInput').keypress(function(event) {
         // 如果按下的键是回车键 (keyCode 为 13)
@@ -84,6 +132,11 @@
             sendMessage(); // 调用发送消息的函数
         }
     });
+
+    function updateCurrentTime() {
+        var currentTime = new Date().toLocaleTimeString();
+        $('#current-time').text(currentTime);
+    }
 
     function sendMessage() {
         var message = $('#messageInput').val();
@@ -166,6 +219,8 @@
     // 启动聊天
     $(document).ready(function() {
         getChatHistory();
+        updateCurrentTime();
+        setInterval(updateCurrentTime, 1000);
     });
 </script>
 </body>
