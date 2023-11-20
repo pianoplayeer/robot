@@ -44,7 +44,8 @@ public class SecurityConfig {
 				.userDetailsService(userDetailsService)
 				.authorizeHttpRequests(
 						c -> c.requestMatchers(HttpMethod.GET, "/", "/login", "/register", "/images/*").permitAll()
-								.anyRequest().authenticated()
+									 .requestMatchers(HttpMethod.POST, "/login", "/register").permitAll()
+									 .anyRequest().authenticated()
 				);
 		
 		return http.build();

@@ -15,16 +15,67 @@ start:
       recharge
     购买套餐:
       buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
+
+unsubscribePackage:
+  response:
+    - action:
+        findPackage
+    - content:
+        "请问您想退订哪个套餐？(请输入套餐名称)"
+  shift:
+    default:
+      unsubscribeSpecificPackage
+
+
+unsubscribeSpecificPackage:
+  response:
+    - action:
+        inBoughtPackages
+    - action:
+        unsubscribePackage
+    - content:
+        "退订成功！"
+    - action:
+        findPackage
+    - content:
+        "退订后余额为："
+    - action:
+        findBalance
+
+
+  shift:
+    余额:
+      balance
+    充值:
+      recharge
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
 
 boughtPackage:
   response:
-    - content:
-        "您已购买的套餐有："
     - action:
         findPackage
   shift:
-    default:
-      start
+    余额:
+      balance
+    充值:
+      recharge
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
 
 buyPackage:
   response:
@@ -42,16 +93,24 @@ buyPackage:
 buyPackageAmount:
     response:
         - action:
-            hasPackage
+            hasPackageAndAfford
         - action:
-            updatePackage
+            buyPackage
         - content:
-            "购买成功！您已购买的套餐有："
+            "购买成功！"
         - action:
             findPackage
     shift:
-      default:
-        start
+      余额:
+        balance
+      充值:
+        recharge
+      购买套餐:
+        buyPackage
+      已购套餐:
+        boughtPackage
+      退订套餐:
+        unsubscribePackage
 
 balance:
   response:
@@ -64,8 +123,12 @@ balance:
       balance
     充值:
       recharge
-    default:
-      start
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
 
 recharge:
   response:
@@ -91,7 +154,11 @@ rechargeAmount:
       balance
     充值:
       recharge
-    default:
-      start
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
 
 

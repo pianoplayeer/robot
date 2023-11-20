@@ -40,7 +40,8 @@
     <input type="password" name="password" id="password" /><br/>
 
     <label for="confirm">确认密码: </label>
-    <input type="password" name="confirm" id="confirm" /><br/>
+    <input type="password" name="confirm" id="confirm" />
+    <br/>
 
     <input type="submit" value="注册" class="item" style="margin: auto 0">
 
@@ -51,6 +52,9 @@
 </div>
 <div th:if="${param.repeat}" class="pos" style="color: red">
     该用户名已存在
+</div>
+<div th:if="${param.blank}" class="pos" style="color: red">
+    账户和密码不可为空
 </div>
 
 </body>

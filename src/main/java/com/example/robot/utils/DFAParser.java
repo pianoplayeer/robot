@@ -74,11 +74,12 @@ public class DFAParser {
 					} else {
 						method.invoke(this);
 					}
-				} catch (ActionException e) {
-					builder.setLength(0);
-					builder.append(e.getMessage());
-					break;
 				} catch (Exception e) {
+					if (e.getCause() instanceof ActionException) {
+						builder.setLength(0);
+						builder.append(e.getCause().getMessage());
+						break;
+					}
 					e.printStackTrace();
 				}
 			} else if (map.containsKey("content")) {
@@ -105,6 +106,30 @@ public class DFAParser {
 		}
 	}
 	
+	public void hasPackageAndAfford() throws ActionException {
+		DataPackage p = reposService.getDataPackageRepos().findByPackageName(currentMsg);
+		if (p == null) {
+			throw new ActionException("您输入的套餐不存在");
+		}
+		
+		User user = reposService.getUserRepos().findByUsername(username);
+		if (user.getPackageList().contains(p)) {
+			throw new ActionException("您已经购买了该套餐");
+		} else if (user.getBalance() < p.getPackagePrice()) {
+			throw new ActionException("您的余额不足");
+		}
+	}
+	
+	public void buyPackage() {
+		DataPackage p = reposService.getDataPackageRepos().findByPackageName(currentMsg);
+		User user = reposService.getUserRepos().findByUsername(username);
+		
+		user.getPackageList().add(p);
+		user.setBalance(user.getBalance() - p.getPackagePrice());
+		
+		reposService.getUserRepos().save(user);
+	}
+	
 	public String findBalance() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 		// 创建DecimalFormat对象并设置格式
 		DecimalFormat format = new DecimalFormat("#,##0.00");
@@ -128,6 +153,7 @@ public class DFAParser {
 							.invoke(reposService.getUserRepos(), username, Double.parseDouble(currentMsg));
 	}
 	
+	// 查找可以购买的套餐（还未被购买的）
 	public String findAvailablePackage() throws ActionException {
 		List<DataPackage> boughtPackages = reposService.getUserRepos().findByUsername(username).getPackageList();
 		StringBuilder builder = new StringBuilder();
@@ -145,17 +171,39 @@ public class DFAParser {
 		return builder.toString();
 	}
 	
+	public void inBoughtPackages() throws ActionException {
+		List<DataPackage> boughtPackages = reposService.getUserRepos().findByUsername(username).getPackageList();
+		
+		if (!boughtPackages.contains(reposService.getDataPackageRepos().findByPackageName(currentMsg))) {
+			throw new ActionException("您未购买该套餐");
+		}
+	}
+	
+	public void unsubscribePackage() {
+		User user = reposService.getUserRepos().findByUsername(username);
+		DataPackage p = reposService.getDataPackageRepos().findByPackageName(currentMsg);
+		
+		user.getPackageList().remove(p);
+		user.setBalance(user.getBalance() + p.getPackagePrice());
+		
+		reposService.getUserRepos().save(user);
+	}
+	
+	// 查找已经购买的套餐
 	public String findPackage() throws ActionException {
 		StringBuilder builder = new StringBuilder();
+		List<DataPackage> boughtPackages = reposService.getUserRepos()
+													.findByUsername(username)
+													.getPackageList();
 		
-		for (DataPackage p : reposService.getUserRepos()
-				.findByUsername(username).getPackageList()) {
-			
-			builder.append(p.getPackageName()).append("\n");
+		if (boughtPackages.isEmpty()) {
+			throw new ActionException("您未购买任何套餐");
 		}
 		
-		if (builder.length() == 0) {
-			throw new ActionException("您未购买任何套餐");
+		builder.append("您已购买的套餐有：\n");
+		for (DataPackage p : boughtPackages) {
+			
+			builder.append(p.getPackageName()).append("\n");
 		}
 		
 		return builder.toString();

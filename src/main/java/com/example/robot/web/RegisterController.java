@@ -33,6 +33,10 @@ public class RegisterController {
 	
 	@PostMapping
 	public String processRegistration(RegisterForm form) {
+		if (form.getUsername().equals("") || form.getPassword().equals("")) {
+			return "redirect:/register?blank";
+		}
+		
 		if (form.getPassword().equals(form.getConfirm())) {
 			User user = form.toUser(passwordEncoder);
 			

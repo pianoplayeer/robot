@@ -22,10 +22,12 @@ public class RobotApplication {
 		SpringApplication.run(RobotApplication.class, args);
 	}
 	
-	@Bean
-	CommandLineRunner init(UserRepository userRepository, DataPackageRepository dataPackageRepository) {
-		return args -> {
-			log.info(userRepository.findByUsername("jxy").toString());
-		};
-	}
+//	@Bean
+//	CommandLineRunner init(UserRepository userRepository, DataPackageRepository dataPackageRepository) {
+//		return args -> {
+//			for (int i = 2; i < 10; i++) {
+//				dataPackageRepository.save(new DataPackage("套餐" + i, i * 8));
+//			}
+//		};
+//	}
 }
