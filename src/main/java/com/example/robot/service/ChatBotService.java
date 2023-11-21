@@ -37,6 +37,10 @@ public class ChatBotService {
 		this.env = env;
 	}
 	
+	public void deleteUserChatBot(String user) {
+		userParserMap.remove(user);
+	}
+	
 	public void sendUserMessage(String message, String username) {
 		DFAParser parser = userParserMap.get(username);
 		List<Message> messages = parser.getMsgList();

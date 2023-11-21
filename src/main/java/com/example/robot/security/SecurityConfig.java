@@ -1,5 +1,6 @@
 package com.example.robot.security;
 
+import com.example.robot.service.ChatBotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 /**
  * @date 2023/11/14
@@ -22,10 +24,13 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 	
 	private final UserDetailsService userDetailsService;
+	private final LogoutSuccessHandler logoutSuccessHandler;
 	
 	@Autowired
-	public SecurityConfig(UserDetailsService userDetailsService) {
+	public SecurityConfig(UserDetailsService userDetailsService,
+						  LogoutSuccessHandler logoutSuccessHandler) {
 		this.userDetailsService = userDetailsService;
+		this.logoutSuccessHandler = logoutSuccessHandler;
 	}
 	
 	@Bean
@@ -42,7 +47,7 @@ public class SecurityConfig {
 									 .failureUrl("/login?error")
 				)
 				.logout(
-						c -> c.logoutSuccessUrl("/")
+						c -> c.logoutSuccessUrl("/").logoutSuccessHandler(logoutSuccessHandler)
 				)
 				.userDetailsService(userDetailsService)
 				.authorizeHttpRequests(
