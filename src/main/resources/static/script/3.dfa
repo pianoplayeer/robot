@@ -1,0 +1,113 @@
+start:
+  response:
+    - content:
+        "欢迎使用客服机器人。您可以查询以下问题/进行以下操作：\n
+        \t1. 已购套餐\n
+        \t2. 购买套餐\n
+        \t3. 退订套餐\n
+        请问您想进行什么查询/操作？（输入选项名称）"
+  shift:
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
+
+unsubscribePackage:
+  response:
+    - action:
+        findPackage
+    - content:
+        "请问您想退订哪个套餐？(请输入套餐名称)"
+  shift:
+    default:
+      unsubscribeSpecificPackage
+
+
+unsubscribeSpecificPackage:
+  response:
+    - action:
+        inBoughtPackages
+    - action:
+        unsubscribePackage
+    - content:
+        "退订成功！"
+    - action:
+        findPackage
+    - content:
+        "退订后余额为："
+    - action:
+        findBalance
+
+
+  shift:
+    余额:
+      balance
+    充值:
+      recharge
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
+
+boughtPackage:
+  response:
+    - action:
+        findPackage
+  shift:
+    余额:
+      balance
+    充值:
+      recharge
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
+buyPackage:
+  response:
+    - content:
+        "您还未购买过的套餐有：\n"
+    - action:
+        findAvailablePackage
+    - content:
+        "请问您想购买哪个套餐？(请输入套餐名称)"
+
+  shift:
+    default:
+      buyPackageAmount
+
+buyPackageAmount:
+  response:
+    - action:
+        hasPackageAndAfford
+    - action:
+        buyPackage
+    - content:
+        "购买成功！"
+    - action:
+        findPackage
+  shift:
+    余额:
+      balance
+    充值:
+      recharge
+    购买套餐:
+      buyPackage
+    已购套餐:
+      boughtPackage
+    退订套餐:
+      unsubscribePackage
+
+
+
+
+
+

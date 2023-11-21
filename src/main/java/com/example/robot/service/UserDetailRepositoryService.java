@@ -13,6 +13,10 @@ import org.springframework.stereotype.Service;
  * @package com.example.robot.service
  */
 
+/**
+ * 该类实现了Spring Security的UserDetailsService接口，重写loadUserByUsername,
+ * 用于从数据库中获取用户信息
+ */
 @Service
 public class UserDetailRepositoryService
 	implements UserDetailsService {

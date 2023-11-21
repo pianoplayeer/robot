@@ -19,6 +19,12 @@ import java.util.Map;
  * @package com.example.robot.service
  */
 
+/**
+ * 聊天机器人服务类，将机器人操作封装成服务，供对应的RestController调用
+ *
+ * @apiNote 该类方法的注释均在ChatBotApiController中写过，这里就不重复写了，
+ * 			对应的方法名称相同。
+ */
 @Service
 public class ChatBotService {
 	
@@ -37,6 +43,10 @@ public class ChatBotService {
 		this.env = env;
 	}
 	
+	/**
+	 * 删除用户聊天机器人
+	 * @param user 用户名
+	 */
 	public void deleteUserChatBot(String user) {
 		userParserMap.remove(user);
 	}

@@ -16,6 +16,10 @@ import java.io.IOException;
  * @package com.example.robot.security
  */
 
+
+/**
+ * 用于处理用户退出登录的逻辑，将退出用户的聊天机器人（解释器DFAParser）删除
+ */
 @Component
 @Slf4j
 public class LogoutSuccessHandlerImpl implements LogoutSuccessHandler {
