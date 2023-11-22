@@ -171,16 +171,12 @@ public class DFAParser {
 	/**
 	 * 查找用户余额，并格式化为字符串
 	 * @return 格式化后的余额字符串
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
-	public String findBalance() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	public String findBalance() {
 		// 创建DecimalFormat对象并设置格式
 		DecimalFormat format = new DecimalFormat("#,##0.00");
 		
-		return format.format(((User) UserRepository.class.getDeclaredMethod("findByUsername", String.class)
-											.invoke(reposService.getUserRepos(), username)).getBalance());
+		return format.format(reposService.getUserRepos().findByUsername(username).getBalance());
 	}
 	
 	/**
@@ -197,15 +193,10 @@ public class DFAParser {
 	
 	/**
 	 * 更新用户余额
-	 * @throws NoSuchMethodException
-	 * @throws InvocationTargetException
-	 * @throws IllegalAccessException
 	 */
-	public void updateBalance()
-			throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+	public void updateBalance() {
 		
-		UserRepository.class.getDeclaredMethod("updateBalanceByUsername", String.class, double.class)
-							.invoke(reposService.getUserRepos(), username, Double.parseDouble(currentMsg));
+		reposService.getUserRepos().updateBalanceByUsername(username, Double.parseDouble(currentMsg));
 	}
 	
 	/**

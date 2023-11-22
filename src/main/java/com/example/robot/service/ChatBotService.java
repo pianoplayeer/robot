@@ -28,16 +28,17 @@ import java.util.Map;
 @Service
 public class ChatBotService {
 	
-	private RepositoryService reposService;
+	private final RepositoryService reposService;
 	
-	private Map<String, DFAParser> userParserMap = new HashMap<>();
+	private final Map<String, DFAParser> userParserMap = new HashMap<>();
 	
-	private Environment env;
+	private final Environment env;
 	
-	private ResourceLoader loader;
+	private final ResourceLoader loader;
 	
 	
-	public ChatBotService(RepositoryService reposService, ResourceLoader loader, Environment env) {
+	public ChatBotService(RepositoryService reposService, ResourceLoader loader,
+						  Environment env) {
 		this.reposService = reposService;
 		this.loader = loader;
 		this.env = env;

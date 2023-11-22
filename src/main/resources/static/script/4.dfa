@@ -1,0 +1,30 @@
+start:
+  response:
+    - content:
+        "你好，请问有什么想要问的吗？（撸猫位置，撸狗位置）"
+
+  shift:
+    撸猫位置:
+      cat
+    撸狗位置:
+      dog
+
+cat:
+  response:
+    - content:
+        "撸猫位置在宿舍楼前"
+  shift:
+    撸猫位置:
+      cat
+    撸狗位置:
+      dog
+
+dog:
+  response:
+    - content:
+        "撸狗位置在宿舍楼后"
+  shift:
+    撸猫位置:
+      cat
+    撸狗位置:
+      dog
