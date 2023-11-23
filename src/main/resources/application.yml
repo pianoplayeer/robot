@@ -14,4 +14,4 @@ spring:
 
 dfa:
   filename:
-    4.dfa
+    1.dfa
