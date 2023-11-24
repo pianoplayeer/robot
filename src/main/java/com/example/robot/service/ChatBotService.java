@@ -67,10 +67,16 @@ public class ChatBotService {
 	
 	public Message getBotMessage(String username) {
 		DFAParser parser = userParserMap.get(username);
-		List<Message> messages = parser.getMsgList();
 		
-		// 返回聊天记录
-		return messages.get(messages.size() - 1);
+		if (parser != null) {
+			List<Message> messages = parser.getMsgList();
+			
+			// 返回聊天记录
+			return messages.get(messages.size() - 1);
+		} else {
+			return getChatHistory(username).get(0);
+		}
+		
 	}
 	
 	public List<Message> getChatHistory(String username) {
