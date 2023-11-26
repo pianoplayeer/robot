@@ -3,9 +3,6 @@ package com.example.robot.data;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @date 2023/11/18
  * @package com.example.robot.data

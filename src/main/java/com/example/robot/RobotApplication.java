@@ -1,17 +1,9 @@
 package com.example.robot;
 
-import com.example.robot.data.DataPackage;
-import com.example.robot.data.User;
-import com.example.robot.data.repos.DataPackageRepository;
-import com.example.robot.data.repos.UserRepository;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 
 @SpringBootApplication
@@ -22,12 +14,4 @@ public class RobotApplication {
 		SpringApplication.run(RobotApplication.class, args);
 	}
 	
-//	@Bean
-//	CommandLineRunner init(UserRepository userRepository, DataPackageRepository dataPackageRepository) {
-//		return args -> {
-//			for (int i = 2; i < 10; i++) {
-//				dataPackageRepository.save(new DataPackage("套餐" + i, i * 8));
-//			}
-//		};
-//	}
 }
