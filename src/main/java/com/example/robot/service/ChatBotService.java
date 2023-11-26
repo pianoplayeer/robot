@@ -1,14 +1,11 @@
 package com.example.robot.service;
 
-import com.example.robot.data.repos.UserRepository;
+
 import com.example.robot.utils.DFAParser;
 import com.example.robot.utils.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +49,11 @@ public class ChatBotService {
 		userParserMap.remove(user);
 	}
 	
+	/**
+	 * 根据用户发送的消息进行相应的状态转换与响应
+	 * @param message 用户消息
+	 * @param username 当前用户
+	 */
 	public void sendUserMessage(String message, String username) {
 		DFAParser parser = userParserMap.get(username);
 		List<Message> messages = parser.getMsgList();
